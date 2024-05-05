@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { fetchDepartments, deleteDepartment, updateDepartment } from './api'; // Import fetchDepartments, deleteDepartment, and updateDepartment functions from api.js
 import DepartmentForm from './Departmentform';
+import './Departmentspage.css';
 
 function DepartmentsPage() {
     const [departments, setDepartments] = useState([]);
     const [error, setError] = useState(null);
-    const [newDepartmentName, setNewDepartmentName] = useState(''); // State to hold the new department name
-    const [showInputForDepartment, setShowInputForDepartment] = useState(null); // State to track the department ID for which the input field is shown
+    const [newDepartmentName, setNewDepartmentName] = useState(''); 
+    const [showInputForDepartment, setShowInputForDepartment] = useState(null); 
+    const [isUpdating, setIsUpdating] = useState(false); // State to track if update mode is active
 
     useEffect(() => {
         const fetchData = async () => {
@@ -15,7 +17,7 @@ function DepartmentsPage() {
                 setDepartments(data);
             } catch (error) {
                 console.error('Error fetching departments:', error);
-                setError(error.message); // Set error state
+                setError(error.message); 
             }
         };
 
@@ -24,43 +26,39 @@ function DepartmentsPage() {
 
     const handleDelete = async (departmentId) => {
         try {
-            // Call deleteDepartment function to delete the department
             await deleteDepartment(departmentId);
-            // Update departments state to remove the deleted department
             setDepartments(departments.filter(department => department.id !== departmentId));
         } catch (error) {
             console.error('Error deleting department:', error);
-            // Handle error as needed
         }
     };
 
     const handleUpdate = async (departmentId) => {
         try {
-            // Call updateDepartment function to update the department name
             await updateDepartment(departmentId, { name: newDepartmentName });
-            // Fetch updated list of departments
             const updatedDepartments = await fetchDepartments();
-            // Update departments state with the updated list
             setDepartments(updatedDepartments);
-            // Hide the input field after updating
+            setIsUpdating(false); // Exit update mode
             setShowInputForDepartment(null);
         } catch (error) {
             console.error('Error updating department:', error);
-            // Handle error as needed
         }
+    };
+
+    const handleCancel = () => {
+        setIsUpdating(false); // Exit update mode
+        setShowInputForDepartment(null);
+        setNewDepartmentName(''); // Clear new department name
     };
 
     return (
         <div>
             <h1>Departments</h1>
-            {error && <p>Error: {error}</p>} {/* Display error message if error state is set */}
+            {error && <p>Error: {error}</p>}
             <ul>
                 {departments.map((department) => (
                     <li key={department.id}>
-                        {department.name}
-                        <button onClick={() => handleDelete(department.id)}>Delete</button>
-                        <button onClick={() => setShowInputForDepartment(department.id)}>Update</button>
-                        {showInputForDepartment === department.id && (
+                        {isUpdating && showInputForDepartment === department.id ? (
                             <div>
                                 <input 
                                     type="text" 
@@ -74,6 +72,17 @@ function DepartmentsPage() {
                                     placeholder="Enter new department name" 
                                 />
                                 <button onClick={() => handleUpdate(department.id)}>Save</button>
+                                <button onClick={handleCancel}>Cancel</button>
+                            </div>
+                        ) : (
+                            <div>
+                                {department.name}
+                                <button onClick={() => handleDelete(department.id)}>Delete</button>
+                                <button onClick={() => {
+                                    setShowInputForDepartment(department.id);
+                                    setIsUpdating(true); // Enter update mode
+                                    setNewDepartmentName(department.name); // Populate input with current name
+                                }}>Update</button>
                             </div>
                         )}
                     </li>
