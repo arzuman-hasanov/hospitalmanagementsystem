@@ -134,7 +134,6 @@ function Department() {
         <div>
             <br></br><br></br>
             <h2>Departments</h2>
-            {error && <p>Error: {error}</p>}
             <Button variant="primary" className="m-2 float-end" onClick={() => setShowModal(true)}>
                 Add Department
             </Button>
