@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { fetchDepartments, deleteDepartment, updateDepartment, createDepartment } from './api'; // Import all necessary functions from api.js
+import { fetchDepartments, deleteDepartment, updateDepartment, createDepartment } from '../api'; // Import all necessary functions from api.js
 import { Modal, Button } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 function Department() {
     const [departments, setDepartments] = useState([]);
@@ -23,25 +24,74 @@ function Department() {
 
         fetchData();
     }, []);
-
+    
+    
     const handleDelete = async (departmentId) => {
         try {
-            await deleteDepartment(departmentId);
-            setDepartments(departments.filter(department => department.id !== departmentId));
+            const departmentToDelete = departments.find(d => d.id === departmentId);
+
+            if (!departmentToDelete) {
+                throw new Error('Department not found');
+            }
+
+            const result = await Swal.fire({
+                title: 'Delete Department',
+                text: `Are you sure you want to delete "${departmentToDelete.name}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#dc3545', // Bootstrap danger color
+            });
+
+            if (result.isConfirmed) {
+                await deleteDepartment(departmentId);
+                setDepartments(departments.filter(d => d.id !== departmentId));
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Department Deleted',
+                    text: `Department "${departmentToDelete.name}" has been deleted successfully.`,
+                });
+            }
         } catch (error) {
             console.error('Error deleting department:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to delete department. Please try again.',
+            });
         }
     };
 
     const handleUpdate = async (departmentId) => {
         try {
+            // Perform update operation
             await updateDepartment(departmentId, { name: newDepartmentName });
+
+            // Fetch updated departments
             const updatedDepartments = await fetchDepartments();
             setDepartments(updatedDepartments);
+
+            // Reset state after successful update
             setIsUpdating(false);
             setShowInputForDepartment(null);
+
+            // Show success alert
+            Swal.fire({
+                icon: 'success',
+                title: 'Department Updated',
+                text: `Department updated successfully.`,
+            });
         } catch (error) {
             console.error('Error updating department:', error);
+
+            // Show error alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to update department. Please try again.',
+            });
         }
     };
 
@@ -59,11 +109,26 @@ function Department() {
             setDepartments(updatedDepartments);
             setShowModal(false);
             setNewDepartmentName('');
+
+            // Show success alert
+            Swal.fire({
+                title: 'Create Department',
+                text: 'Department created successfully.',
+                icon: 'success',
+            });
         } catch (error) {
             console.error('Error creating department:', error);
-            setError(error.message);
+            setError('Failed to create department. Please try again.');
+
+            // Show error alert
+            Swal.fire({
+                title: 'Create Department',
+                text: 'Failed to create department. Please try again.',
+                icon: 'error',
+            });
         }
     };
+
 
     return (
         <div>
@@ -140,6 +205,15 @@ function Department() {
                                                 }}
                                             >
                                                 Update
+                                            </button>
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={()=>{
+                                                    window.location.href = "/departments/details";
+                                                }}
+                                            >
+                                                Details
+                                                
                                             </button>
                                         </div>
                                     )}

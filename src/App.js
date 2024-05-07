@@ -1,8 +1,9 @@
 import './App.css';
-import Department from './Department';
-import {Home} from './Home';
-import Doctor from './Doctor';
+import Department from './Departments/Department';
+import {Home} from './Home/Home';
+import Doctor from './Doctors/Doctor';
 import { BrowserRouter, Route, Routes, NavLink } from 'react-router-dom';
+import Departmentdetails from './Departments/Departmentdetails';
 
 
 function App() {
@@ -21,8 +22,8 @@ function App() {
             </NavLink>
           </li>
           <li className="nav-item- m-1">
-            <NavLink className="btn btn-light btn-outline-primary" to="/department">
-              Department
+            <NavLink className="btn btn-light btn-outline-primary" to="/departments">
+              Departments
             </NavLink>
           </li>
           <li className="nav-item- m-1">
@@ -35,8 +36,9 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/department" element={<Department />} />
+        <Route path="/departments" element={<Department />} />
         <Route path="/doctor" element={<Doctor />} />
+        <Route path="/departments/details" element={<Departmentdetails/>} />
       </Routes>
     </div>
     </BrowserRouter>
