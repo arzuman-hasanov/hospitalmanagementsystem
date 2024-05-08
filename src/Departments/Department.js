@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 function Department() {
     const [departments, setDepartments] = useState([]);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
     const [newDepartmentName, setNewDepartmentName] = useState('');
     const [showInputForDepartment, setShowInputForDepartment] = useState(null);
     const [isUpdating, setIsUpdating] = useState(false); // State to track if update mode is active
