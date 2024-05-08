@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchDepartments, deleteDepartment, updateDepartment, createDepartment } from '../api'; // Import all necessary functions from api.js
 import { Modal, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
+// import { Link, useParams } from 'react-router-dom';
 
 function Department() {
     const [departments, setDepartments] = useState([]);
@@ -10,8 +11,7 @@ function Department() {
     const [showInputForDepartment, setShowInputForDepartment] = useState(null);
     const [isUpdating, setIsUpdating] = useState(false); // State to track if update mode is active
     const [showModal, setShowModal] = useState(false);
-    // const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
-    // const [doctors, setDoctors] = useState([]);
+    // const [showDetails, setShowDetails] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -264,18 +264,6 @@ function Department() {
                     </form>
                 </Modal.Body>
             </Modal>
-
-            {/* Display doctors for the selected department
-            {selectedDepartmentId && (
-                <div>
-                    <h3>Doctors in Department {selectedDepartmentId}</h3>
-                    <ul>
-                        {doctors.map((doctor) => (
-                            <li key={doctor.id}>{doctor.name}</li>
-                        ))}
-                    </ul>
-                </div>
-            )} */}
         </div>
     );
 }

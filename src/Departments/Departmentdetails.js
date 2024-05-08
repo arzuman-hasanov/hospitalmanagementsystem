@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+// import { fetchDepartments } from '../api';
 
-const DepartmentDetails = ({ departmentId }) => {
+const DepartmentDetails = () => {
+  const { id } = useParams(); // Access the department id from the route params
   const [department, setDepartment] = useState(null);
+  const API = "https:/localhost:7281/departments"
 
   useEffect(() => {
-    const fetchDepartmentDetails = async () => {
-      try {
-        const response = await fetch(`/api/departments/${departmentId}`);
-        const data = await response.json();
-        setDepartment(data);
-      } catch (error) {
+    // Fetch department details based on departmentId
+    axios.get(`${API}/${id}`)
+      .then(response => {
+        setDepartment(response.data);
+      })
+      .catch(error => {
         console.error('Error fetching department details:', error);
-      }
-    };
+      });
+  }, [id]);
 
-    fetchDepartmentDetails();
-  }, [departmentId]);
-
+  if (!department) {
+    return <div>Loading department details...</div>;
+  }
   return (
     <div>
-      <h2>Department Details</h2>
-      {department ? (
-        <>
-          <h3>{department.name}</h3>
-          <p>Department ID: {department.id}</p>
-          <h4>Doctors:</h4>
-          <ul>
-            {department.doctors.map((doctor) => (
-              <li key={doctor.id}>
-                <strong>{doctor.name} {doctor.surname}</strong>
-                <p>Address: {doctor.address}</p>
-                <p>Available: {doctor.isAvailable ? 'Yes' : 'No'}</p>
-                <p>Department: {doctor.departmentId}</p>
-              </li>
-            ))}
-          </ul>
-        </>
+      <h3>{department.name}</h3>
+      <h4>Doctors:</h4>
+      {department.doctors && department.doctors.length > 0 ? (
+        <ul>
+          {department.doctors.map(doctor => (
+            <li key={doctor.id}>
+              {doctor.name} {doctor.surname} - {doctor.address}
+            </li>
+          ))}
+        </ul>
       ) : (
-        <p>Loading department details...</p>
+        <h2>No doctors found for this department</h2>
       )}
     </div>
   );
