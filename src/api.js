@@ -1,19 +1,53 @@
 // api.js
-
+import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const API_BASE_URL = 'https:/localhost:7281'; // Base URL of your backend API
+const API_DOC = 'https:/localhost:7281/api';
 
 // Function to fetch all departments
 const fetchDepartments = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/Departments`);
+        Swal.fire({
+            icon: 'success',
+            title: 'Departments Loaded',
+            text: 'Departments data has been loaded successfully!',
+        });
         return response.data; // Return the department data
+            
     } catch (error) {
         console.error('Error fetching departments:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to fetch departments. Please try again later.',
+        });
         throw error; // Throw the error to handle it in the calling code
     }
 };
+const fetchDoctors = async () => {
+    try {
+        const response = await axios.get(`${API_DOC}/Doctors`);
+        Swal.fire({
+            icon: 'success',
+            title: 'Data Loaded',
+            text: 'Doctors data has been loaded successfully!',
+        });
+        return response.data; // Return the doctor data
+    } catch (error) {
+        console.error('Error fetching departments:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to fetch Data. Please try again later.',
+        });
+        throw error; // Throw the error to handle it in the calling code
+    }
+};
+
+
+
 
 // Function to create a new department
 const createDepartment = async (departmentData) => {
@@ -54,4 +88,4 @@ const deleteDepartment = async (departmentId) => {
     }
 };
 
-export { fetchDepartments, createDepartment, updateDepartment, deleteDepartment };
+export { fetchDepartments, createDepartment, updateDepartment, deleteDepartment, fetchDoctors};
