@@ -29,14 +29,6 @@ function Department() {
 
 
     const handleDetailsClick = async (departmentId) => {
-    //     try {
-    //         const doctorsData = await fetchDoctorsByDepartmentId(departmentId);
-    //         // Navigate to the department URL with the department ID
-    //         window.location.href = (`/departments/${departmentId}`, { doctors: doctorsData });
-    //     } catch (error) {
-    //         console.error('Error fetching doctors:', error);
-    //         // Handle error
-    //     }
         window.location.href = (`/departments/${departmentId}`);
     };
 
