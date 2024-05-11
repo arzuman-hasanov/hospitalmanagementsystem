@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-// import { fetchDepartments } from '../api';
+// import { fetchData } from '../api';
 
 const DepartmentDetails = () => {
   const { id } = useParams(); // Access the department id from the route params

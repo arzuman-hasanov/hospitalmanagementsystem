@@ -214,7 +214,7 @@ function Department() {
                                                 Update
                                             </button>
                                             <button
-                                className="btn btn-primary"
+                                className="btn btn-primary ms-2"
                                 onClick={() => handleDetailsClick(department.id)}
                             >
                                 Details
