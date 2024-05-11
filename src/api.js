@@ -120,21 +120,26 @@ const deleteDoctor = async (doctorId) => {
     }
 };
 
-export async function createAppointment(doctorId, date) {
 
-    const response = await fetch(`/api/appointments`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ doctorId, date }),
-    });
+const createAppointment = async (appointmentData) => {
+    try {
 
-    if (!response.ok) {
-        throw new Error('Failed to create appointment');
+        const formData = new FormData();
+        formData.append('doctorId', appointmentData.doctorId);
+        formData.append('doctorName', appointmentData.doctorName);
+        formData.append('patientId', appointmentData.patientId);
+        formData.append('patientName', appointmentData.patientName);
+        formData.append('start', appointmentData.start);
+        formData.append('end', appointmentData.end);
+        
+
+
+        const response = await axios.post(`${API_BASE_URL}/Appointments`, appointmentData);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating appointment:', error);
+        throw error;
     }
+};
 
-    return response.json();
-}
-
-export { fetchDepartments, createDepartment, updateDepartment, deleteDepartment, fetchDoctors, createDoctor, updateDoctor, deleteDoctor };
+export { fetchDepartments, createDepartment, updateDepartment, deleteDepartment, fetchDoctors, createDoctor, updateDoctor, deleteDoctor, createAppointment };
