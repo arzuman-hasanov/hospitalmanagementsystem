@@ -35,7 +35,7 @@ function Appointment() {
         try {
             const datetime = `${selectedDate} ${selectedTime}:00`;
             const startDateTime = new Date(datetime);
-            const endDateTime = new Date(startDateTime.getTime() + (60 * 60 * 1000)); // Add 1 hour in milliseconds
+            const endDateTime = new Date(startDateTime.getTime() + (30 * 60 * 1000)); // Add 30 minutes in milliseconds
     
             const formattedStart = startDateTime.toISOString().slice(0, 19).replace('T', ' ');
             const formattedEnd = endDateTime.toISOString().slice(0, 19).replace('T', ' ');
@@ -148,17 +148,6 @@ function Appointment() {
                                 <option key={index} value={time}>{time}</option>
                             ))}
                         </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="patientName">Your Name:</label>
-                        <input
-                            id="patientName"
-                            type="text"
-                            className="form-control"
-                            value={patientName}
-                            onChange={(e) => setPatientName(e.target.value)}
-                            required
-                        />
                     </div>
                     <div className="d-grid gap-2">
                         <Button variant="primary" onClick={handleAppointmentConfirmation}>
